@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_0fr9mxs" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+  <bpmn:process id="ProcessThatConsumeMessages" name="Process that Consume Messages" isExecutable="true">
+    <bpmn:startEvent id="Event_0mjjm0y">
+      <bpmn:outgoing>Flow_0wfwcls</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_1qmj5al">
+      <bpmn:incoming>Flow_0ytpz5r</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_01g4sm8" sourceRef="CheckOpenMessagesTask" targetRef="Activity_0canw20" />
+    <bpmn:sequenceFlow id="Flow_0wfwcls" sourceRef="Event_0mjjm0y" targetRef="CheckOpenMessagesTask" />
+    <bpmn:serviceTask id="CheckOpenMessagesTask" name="Check Open Messages" camunda:delegateExpression="${generateFraudFileDelegate}">
+      <bpmn:incoming>Flow_0wfwcls</bpmn:incoming>
+      <bpmn:outgoing>Flow_01g4sm8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0ytpz5r" sourceRef="Activity_0canw20" targetRef="Event_1qmj5al" />
+    <bpmn:serviceTask id="Activity_0canw20" name="Consume All Messages" camunda:delegateExpression="${consumeFraudMessagesDelegate}">
+      <bpmn:incoming>Flow_01g4sm8</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ytpz5r</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:textAnnotation id="TextAnnotation_0lkh2q5">
+      <bpmn:text>Would be similar to: Update CAIS CAPS in Data Amendment Excel</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1go3d30" sourceRef="CheckOpenMessagesTask" targetRef="TextAnnotation_0lkh2q5" />
+    <bpmn:textAnnotation id="TextAnnotation_0rmf46r">
+      <bpmn:text>Would be similar to:
+Update each Fraud Parking lot process</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1xk5zuq" sourceRef="Activity_0canw20" targetRef="TextAnnotation_0rmf46r" />
+  </bpmn:process>
+  <bpmn:message id="Message_05tuk8y" name="Message" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ProcessThatConsumeMessages">
+      <bpmndi:BPMNShape id="TextAnnotation_0lkh2q5_di" bpmnElement="TextAnnotation_0lkh2q5">
+        <dc:Bounds x="230" y="270" width="100" height="96" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0rmf46r_di" bpmnElement="TextAnnotation_0rmf46r">
+        <dc:Bounds x="470" y="270" width="100" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_01g4sm8_di" bpmnElement="Flow_01g4sm8">
+        <di:waypoint x="330" y="160" />
+        <di:waypoint x="470" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wfwcls_di" bpmnElement="Flow_0wfwcls">
+        <di:waypoint x="178" y="160" />
+        <di:waypoint x="230" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ytpz5r_di" bpmnElement="Flow_0ytpz5r">
+        <di:waypoint x="570" y="160" />
+        <di:waypoint x="612" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0mjjm0y_di" bpmnElement="Event_0mjjm0y">
+        <dc:Bounds x="142" y="142" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0heza8m_di" bpmnElement="CheckOpenMessagesTask">
+        <dc:Bounds x="230" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1qmj5al_di" bpmnElement="Event_1qmj5al">
+        <dc:Bounds x="612" y="142" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1916kcv_di" bpmnElement="Activity_0canw20">
+        <dc:Bounds x="470" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1go3d30_di" bpmnElement="Association_1go3d30">
+        <di:waypoint x="280" y="200" />
+        <di:waypoint x="280" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1xk5zuq_di" bpmnElement="Association_1xk5zuq">
+        <di:waypoint x="520" y="200" />
+        <di:waypoint x="520" y="270" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

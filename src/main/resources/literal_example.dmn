@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:camunda="http://camunda.org/schema/1.0/dmn" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="Definitions_0ohyj74" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+  <decision id="LiteralExample" name="Literal Example">
+    <variable id="InformationItem_1wl9qfw" name="amount" typeRef="double" />
+    <literalExpression id="LiteralExpression_0c9muee" expressionLanguage="feel">
+      <text>{
+  amount: input * 0.15
+}.amount / 10</text>
+    </literalExpression>
+  </decision>
+  <decision id="DecisionTable" name="Decision Table">
+    <informationRequirement id="InformationRequirement_0ds2wut">
+      <requiredDecision href="#LiteralExample" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_1qo4dms">
+      <input id="InputClause_1gnp2vh" label="amount" camunda:inputVariable="amount">
+        <inputExpression id="LiteralExpression_0bajbky" typeRef="double">
+          <text>amount</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_05u74zr" label="status" name="status" typeRef="string" />
+      <rule id="DecisionRule_1gl11ni">
+        <inputEntry id="UnaryTests_0qsnbc3">
+          <text>&lt;= 150</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1qzxhmw">
+          <text>"APPROVED"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0aac3p3">
+        <inputEntry id="UnaryTests_0rc2h7v">
+          <text>&gt; 150</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ql9mjv">
+          <text>"REJECTED"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape id="DMNShape_0hyd12w" dmnElementRef="LiteralExample">
+        <dc:Bounds height="80" width="180" x="160" y="270" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_1yvfeta" dmnElementRef="InformationRequirement_0ds2wut">
+        <di:waypoint x="250" y="270" />
+        <di:waypoint x="460" y="180" />
+        <di:waypoint x="460" y="160" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0d1sx7j" dmnElementRef="DecisionTable">
+        <dc:Bounds height="80" width="180" x="370" y="80" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
