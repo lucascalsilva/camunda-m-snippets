@@ -1,0 +1,122 @@
+{
+	"info": {
+		"_postman_id": "093ac503-584e-4e89-8417-568f82201043",
+		"name": "Mphasis - CBL Pilot - Examples",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Start Process With Tasks and Message",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"variables\":{\n        \"loanReferenceNumber\":{\n            \"value\":\"{{$guid}}\",\n            \"type\":\"String\"\n        },\n        \"processType\":{\n            \"value\":\"CNF_EXCEPTION\",\n            \"type\":\"String\"\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/engine-rest/process-definition/key/ProcessWithTasksAndMessage/start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"engine-rest",
+						"process-definition",
+						"key",
+						"ProcessWithTasksAndMessage",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query All Tasks (Audit)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/custom/audit/task?queryTaskType=ALL",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"custom",
+						"audit",
+						"task"
+					],
+					"query": [
+						{
+							"key": "queryTaskType",
+							"value": "ALL"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query All Process Instances (Audit)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/custom/audit/process-instance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"custom",
+						"audit",
+						"process-instance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Process to Consume Messages (Parking Lot)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/engine-rest/process-definition/key/ProcessThatConsumeMessages/start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"engine-rest",
+						"process-definition",
+						"key",
+						"ProcessThatConsumeMessages",
+						"start"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
