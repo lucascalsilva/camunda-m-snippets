@@ -25,7 +25,7 @@ public class GenerateEODFileDelegate implements JavaDelegate {
 
         List<HistoricProcessInstance> historicProcessInstances = historyService.createHistoricProcessInstanceQuery()
                 .finishedBefore(from)
-                .variableValueEquals("loanReferenceNumber", ).list();
+                .variableValueEquals("loanReferenceNumber", "").list();
 
         for(HistoricProcessInstance historicProcessInstance : historicProcessInstances){
             List<HistoricVariableInstance> variableInstances = historyService.createHistoricVariableInstanceQuery()
