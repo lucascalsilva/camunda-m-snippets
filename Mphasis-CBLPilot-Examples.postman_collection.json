@@ -116,6 +116,38 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Start Process with JSON variable",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"variables\":{\n        \"studentsJSON\":{\n            \"value\":\"[\\r\\n  {\\r\\n    \\\"name\\\":\\\"Lucas\\\",\\r\\n    \\\"gender\\\":\\\"Male\\\"\\r\\n  },\\r\\n  {\\r\\n    \\\"name\\\":\\\"Neha\\\",\\r\\n    \\\"gender\\\":\\\"Female\\\"\\r\\n  }\\r\\n]\",\n            \"type\":\"Json\"\n        },\n        \"studentsOBJECT\":{\n            \"value\":\"[\\r\\n  {\\r\\n    \\\"name\\\":\\\"Lucas\\\",\\r\\n    \\\"gender\\\":\\\"Male\\\"\\r\\n  },\\r\\n  {\\r\\n    \\\"name\\\":\\\"Neha\\\",\\r\\n    \\\"gender\\\":\\\"Female\\\"\\r\\n  }\\r\\n]\",\n            \"type\":\"Object\",\n            \"valueInfo\":{\n                \"objectTypeName\":\"java.util.ArrayList<com.example.workflow.model.Student>\",\n                \"serializationDataFormat\":\"application/json\"\n            }\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/engine-rest/process-definition/key/ProcessWithTasksAndMessage/start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"engine-rest",
+						"process-definition",
+						"key",
+						"ProcessWithTasksAndMessage",
+						"start"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}
