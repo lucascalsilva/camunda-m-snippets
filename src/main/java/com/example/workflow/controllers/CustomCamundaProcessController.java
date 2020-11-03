@@ -36,6 +36,7 @@ public class CustomCamundaProcessController {
     private final ProcessEngine processEngine;
     private final ObjectMapper objectMapper;
 
+    /* Supports all filters as in the following documentation https://docs.camunda.org/manual/7.14/reference/rest/history/process-instance/get-process-instance-query/ */
     @GetMapping("/audit/process-instance")
     public List<CustomProcessInstanceDto> getAllProcesses(@RequestParam Map<String, String> queryParameters,
                                                           @RequestParam(required = false) Integer firstResult, @RequestParam(required = false) Integer maxResults) {

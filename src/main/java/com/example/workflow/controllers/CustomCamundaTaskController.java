@@ -1,10 +1,12 @@
 package com.example.workflow.controllers;
 
+import com.example.workflow.dto.CustomUserTaskPerformanceDto;
 import com.example.workflow.dto.CustomVariableInstanceDto;
 import com.example.workflow.dto.CustomTaskDto;
 import com.example.workflow.dto.CustomTaskTypes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.*;
 import org.camunda.bpm.engine.history.*;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
@@ -15,14 +17,15 @@ import org.camunda.bpm.engine.runtime.VariableInstance;
 import org.camunda.bpm.engine.task.IdentityLink;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.task.TaskQuery;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.example.workflow.util.CustomControllerHelper.*;
@@ -30,6 +33,7 @@ import static com.example.workflow.util.CustomControllerHelper.*;
 @RestController
 @RequestMapping("/custom")
 @RequiredArgsConstructor
+@Slf4j
 public class CustomCamundaTaskController {
 
     private final HistoryService historyService;
@@ -76,6 +80,73 @@ public class CustomCamundaTaskController {
         }
 
         return result;
+    }
+
+    @GetMapping("/audit/user-performance")
+    public List<CustomUserTaskPerformanceDto> getUserTaskPerformance(@RequestParam(required = false) String userId,
+                                                                     @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate startDate,
+                                                                     @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate endDate){
+        HistoricTaskInstanceQuery historicTaskInstanceQuery = historyService.createHistoricTaskInstanceQuery();
+        Date startDateConverted = null;
+        Date endDateConverted = null;
+
+        if(userId != null){
+            historicTaskInstanceQuery.taskAssignee(userId);
+        }
+        if(startDate != null){
+            historicTaskInstanceQuery.finishedAfter(convertDate(startDate, LocalTime.MIN));
+        }
+        if(endDate != null){
+            historicTaskInstanceQuery.finishedBefore(convertDate(startDate, LocalTime.MAX));
+        }
+
+        List<HistoricTaskInstance> historicTaskInstances = historicTaskInstanceQuery.list();
+
+        List<String> listOfAssignees = historicTaskInstances.stream().map(HistoricTaskInstance::getAssignee).distinct().collect(Collectors.toList());
+
+        return listOfAssignees.stream().map(assignee -> {
+            List<HistoricTaskInstance> userHistoricalTasks = historicTaskInstances.stream()
+                    .filter(historicTaskInstance -> historicTaskInstance.getAssignee().equalsIgnoreCase(assignee))
+                    .collect(Collectors.toList());
+
+            HistoricIdentityLinkLogQuery historicIdentityLinkLogQuery = historyService.createHistoricIdentityLinkLogQuery()
+                    .type("assignee").operationType("delete").userId(assignee);
+
+            if(startDate != null){
+                historicIdentityLinkLogQuery.dateAfter(convertDate(startDate, LocalTime.MIN));
+            }
+            if(endDate != null){
+                historicIdentityLinkLogQuery.dateBefore(convertDate(endDate, LocalTime.MAX));
+            }
+
+            Long numberOfUnclaims = historicIdentityLinkLogQuery.count();
+
+            Long userTime = null;
+            Long totalTimeInMinutes = TimeUnit.MILLISECONDS.toMinutes(userHistoricalTasks.stream().mapToLong(HistoricTaskInstance::getDurationInMillis).sum());
+            Long totalTasks = (long) userHistoricalTasks.size();
+
+            try {
+                userTime = userHistoricalTasks.stream().mapToLong(historicTaskInstance -> {
+                    HistoricVariableInstance processTime = historyService
+                            .createHistoricVariableInstanceQuery().executionIdIn(historicTaskInstance.getProcessInstanceId())
+                            .variableName("processTime").singleResult();
+
+                    return (Long) processTime.getValue();
+                }).sum();
+            }
+            catch(Exception ex){
+                log.error("Couldn't calculate the user time");
+            }
+
+            CustomUserTaskPerformanceDto customUserTaskPerformance = new CustomUserTaskPerformanceDto();
+            customUserTaskPerformance.setUserName(assignee);
+            customUserTaskPerformance.setCountOfTasks(totalTasks);
+            customUserTaskPerformance.setTotalTimeInMinutes(totalTimeInMinutes);
+            customUserTaskPerformance.setUserTime(userTime);
+            customUserTaskPerformance.setNumberOfUnclaims(numberOfUnclaims);
+
+            return customUserTaskPerformance;
+        }).collect(Collectors.toList());
     }
 
     public CustomTaskDto mapTaskToCustomTaskDto(Task task){
@@ -141,5 +212,9 @@ public class CustomCamundaTaskController {
         customTaskDto.setVariables(customVariableInstances);
 
         return customTaskDto;
+    }
+
+    public Date convertDate(LocalDate localDate, LocalTime localTime){
+        return Date.from(LocalDateTime.of(localDate, localTime).atZone(ZoneId.systemDefault()).toInstant());
     }
 }
