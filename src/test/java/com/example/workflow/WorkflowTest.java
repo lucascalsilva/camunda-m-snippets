@@ -20,18 +20,7 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
 
   @Test
   public void shouldExecuteHappyPath() {
-    // given
-    String processDefinitionKey = "mphasis-snippets-process";
 
-    // when
-    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
-
-    // then
-    assertThat(processInstance).isStarted()
-        .task()
-        .hasDefinitionKey("say-hello")
-        .hasCandidateUser("demo")
-        .isNotAssigned();
   }
 
 }
