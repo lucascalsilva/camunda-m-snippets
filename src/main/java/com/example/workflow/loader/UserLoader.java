@@ -37,7 +37,7 @@ public class UserLoader implements CommandLineRunner {
                 loadMemberships();
             }
             catch (Exception ex){
-                log.error("Issue when loading file ", ex);
+                log.error("Issue when loading files ", ex);
             }
         }
     }

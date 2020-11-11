@@ -24,7 +24,7 @@
       <bpmn:incoming>Flow_0jmy2fx</bpmn:incoming>
       <bpmn:outgoing>Flow_19cix4o</bpmn:outgoing>
     </bpmn:receiveTask>
-    <bpmn:sequenceFlow id="Flow_18nnr9d" sourceRef="Event_0mjjm0y" targetRef="Activity_1oab4dc" />
+    <bpmn:sequenceFlow id="Flow_18nnr9d" sourceRef="Event_0mjjm0y" targetRef="CheckVariablesServiceTask" />
     <bpmn:sequenceFlow id="Flow_09yu5r8" sourceRef="Gateway_0lcxao6" targetRef="Event_1qmj5al" />
     <bpmn:sequenceFlow id="Flow_1ic4xpo" sourceRef="Gateway_1g9amfy" targetRef="UserTask" />
     <bpmn:sequenceFlow id="Flow_0jmy2fx" sourceRef="Gateway_1g9amfy" targetRef="MessageTaskA" />
@@ -44,17 +44,17 @@
       <bpmn:incoming>Flow_15a2ghd</bpmn:incoming>
       <bpmn:outgoing>Flow_1jxd7ab</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_07oq4sf" sourceRef="Activity_1oab4dc" targetRef="Gateway_1g9amfy" />
-    <bpmn:serviceTask id="Activity_1oab4dc" name="Check Variables" camunda:delegateExpression="${showVariablesDelegate}">
+    <bpmn:sequenceFlow id="Flow_07oq4sf" sourceRef="CheckVariablesServiceTask" targetRef="Gateway_1g9amfy" />
+    <bpmn:serviceTask id="CheckVariablesServiceTask" name="Check Variables" camunda:delegateExpression="${showVariablesDelegate}">
       <bpmn:incoming>Flow_18nnr9d</bpmn:incoming>
       <bpmn:outgoing>Flow_07oq4sf</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_0aa0hvh" sourceRef="Gateway_1g9amfy" targetRef="Event_0a75dzd" />
+    <bpmn:sequenceFlow id="Flow_0aa0hvh" sourceRef="Gateway_1g9amfy" targetRef="SomeTimerEvent" />
     <bpmn:endEvent id="Event_1c6bs0d">
       <bpmn:incoming>Flow_17wia0t</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_17wia0t" sourceRef="Event_0a75dzd" targetRef="Event_1c6bs0d" />
-    <bpmn:intermediateCatchEvent id="Event_0a75dzd" name="Some Timer">
+    <bpmn:sequenceFlow id="Flow_17wia0t" sourceRef="SomeTimerEvent" targetRef="Event_1c6bs0d" />
+    <bpmn:intermediateCatchEvent id="SomeTimerEvent" name="Some Timer">
       <bpmn:incoming>Flow_0aa0hvh</bpmn:incoming>
       <bpmn:outgoing>Flow_17wia0t</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_0zr4i9r">
@@ -65,6 +65,15 @@
   <bpmn:message id="Message_05tuk8y" name="Message" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ProcessWithTasksAndMessage">
+      <bpmndi:BPMNEdge id="Flow_17wia0t_di" bpmnElement="Flow_17wia0t">
+        <di:waypoint x="558" y="560" />
+        <di:waypoint x="652" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0aa0hvh_di" bpmnElement="Flow_0aa0hvh">
+        <di:waypoint x="410" y="295" />
+        <di:waypoint x="410" y="560" />
+        <di:waypoint x="522" y="560" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_07oq4sf_di" bpmnElement="Flow_07oq4sf">
         <di:waypoint x="340" y="270" />
         <di:waypoint x="385" y="270" />
@@ -104,15 +113,6 @@
         <di:waypoint x="188" y="270" />
         <di:waypoint x="240" y="270" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0aa0hvh_di" bpmnElement="Flow_0aa0hvh">
-        <di:waypoint x="410" y="295" />
-        <di:waypoint x="410" y="560" />
-        <di:waypoint x="522" y="560" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_17wia0t_di" bpmnElement="Flow_17wia0t">
-        <di:waypoint x="558" y="560" />
-        <di:waypoint x="652" y="560" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_08mft2c_di" bpmnElement="UserTask">
         <dc:Bounds x="490" y="230" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -137,13 +137,13 @@
       <bpmndi:BPMNShape id="Activity_0ah88p6_di" bpmnElement="ExternalTask">
         <dc:Bounds x="490" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0r3oisf_di" bpmnElement="Activity_1oab4dc">
+      <bpmndi:BPMNShape id="Activity_0r3oisf_di" bpmnElement="CheckVariablesServiceTask">
         <dc:Bounds x="240" y="230" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1c6bs0d_di" bpmnElement="Event_1c6bs0d">
         <dc:Bounds x="652" y="542" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0i8m1ma_di" bpmnElement="Event_0a75dzd">
+      <bpmndi:BPMNShape id="Event_0i8m1ma_di" bpmnElement="SomeTimerEvent">
         <dc:Bounds x="522" y="542" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="510" y="585" width="60" height="14" />

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_143n0oq" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+  <bpmn:process id="TimerProcess" name="Timer Process" isExecutable="true">
+    <bpmn:sequenceFlow id="Flow_1chx65s" sourceRef="StartEvent_1" targetRef="Activity_1jk3lnd" />
+    <bpmn:startEvent id="StartEvent_1" name="Every Monday">
+      <bpmn:outgoing>Flow_1chx65s</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_022h276">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/2020-W01/P1W</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_1jk3lnd" name="Logger Delegate" camunda:delegateExpression="${loggerDelegate}">
+      <bpmn:incoming>Flow_1chx65s</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wwhm7o</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_0ra4r78" name="End">
+      <bpmn:incoming>Flow_0wwhm7o</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0wwhm7o" sourceRef="Activity_1jk3lnd" targetRef="Event_0ra4r78" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TimerProcess">
+      <bpmndi:BPMNEdge id="Flow_1chx65s_di" bpmnElement="Flow_1chx65s">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="292" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wwhm7o_di" bpmnElement="Flow_0wwhm7o">
+        <di:waypoint x="392" y="117" />
+        <di:waypoint x="472" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0h20y3o_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="162" y="142" width="71" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_09itqil_di" bpmnElement="Activity_1jk3lnd">
+        <dc:Bounds x="292" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ra4r78_di" bpmnElement="Event_0ra4r78">
+        <dc:Bounds x="472" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="480" y="142" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
