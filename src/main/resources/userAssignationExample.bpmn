@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0i8t48l" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+  <bpmn:process id="DynamicAssignationProcess" name="Dynamic Assignation Process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1fa0vor</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1fa0vor" sourceRef="StartEvent_1" targetRef="DoSomethingTask" />
+    <bpmn:sequenceFlow id="Flow_1dekw9w" sourceRef="DoSomethingTask" targetRef="DefineProcessStatusTask" />
+    <bpmn:exclusiveGateway id="Gateway_0dbiqjg" name="What is the process path?">
+      <bpmn:incoming>Flow_06ysrhp</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ub182l</bpmn:outgoing>
+      <bpmn:outgoing>Flow_12lujg9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_06ysrhp" sourceRef="DefineProcessStatusTask" targetRef="Gateway_0dbiqjg" />
+    <bpmn:endEvent id="Event_1cne4h6">
+      <bpmn:incoming>Flow_1ub182l</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1ub182l" name="Close" sourceRef="Gateway_0dbiqjg" targetRef="Event_1cne4h6">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${processStatus == "CLOSE"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_12lujg9" name="Reassign" sourceRef="Gateway_0dbiqjg" targetRef="DoSomethingTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${processStatus == "REASSIGN"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="DoSomethingTask" name="Do Something" camunda:candidateUsers="demo">
+      <bpmn:extensionElements>
+        <camunda:taskListener delegateExpression="${setDoSomethingAssignee}" event="create" id="" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1fa0vor</bpmn:incoming>
+      <bpmn:incoming>Flow_12lujg9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1dekw9w</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="DefineProcessStatusTask" name="Define Process Status">
+      <bpmn:incoming>Flow_1dekw9w</bpmn:incoming>
+      <bpmn:outgoing>Flow_06ysrhp</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="DynamicAssignationProcess">
+      <bpmndi:BPMNEdge id="Flow_1fa0vor_di" bpmnElement="Flow_1fa0vor">
+        <di:waypoint x="215" y="177" />
+        <di:waypoint x="270" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dekw9w_di" bpmnElement="Flow_1dekw9w">
+        <di:waypoint x="370" y="177" />
+        <di:waypoint x="430" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06ysrhp_di" bpmnElement="Flow_06ysrhp">
+        <di:waypoint x="530" y="177" />
+        <di:waypoint x="595" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ub182l_di" bpmnElement="Flow_1ub182l">
+        <di:waypoint x="645" y="177" />
+        <di:waypoint x="792" y="177" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="704" y="159" width="29" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12lujg9_di" bpmnElement="Flow_12lujg9">
+        <di:waypoint x="620" y="202" />
+        <di:waypoint x="620" y="340" />
+        <di:waypoint x="320" y="340" />
+        <di:waypoint x="320" y="217" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="447" y="322" width="46" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0dbiqjg_di" bpmnElement="Gateway_0dbiqjg" isMarkerVisible="true">
+        <dc:Bounds x="595" y="152" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="585" y="106" width="70" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1cne4h6_di" bpmnElement="Event_1cne4h6">
+        <dc:Bounds x="792" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1yidqvj_di" bpmnElement="DoSomethingTask">
+        <dc:Bounds x="270" y="137" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_007npj1_di" bpmnElement="DefineProcessStatusTask">
+        <dc:Bounds x="430" y="137" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

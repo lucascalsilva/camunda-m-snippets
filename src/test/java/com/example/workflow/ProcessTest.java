@@ -2,6 +2,7 @@ package com.example.workflow;
 
 import com.example.workflow.delegates.LoggerDelegate;
 import com.example.workflow.delegates.ShowVariablesDelegate;
+import com.example.workflow.listeners.task.SetDoSomethingAssignee;
 import com.example.workflow.model.Student;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
@@ -48,6 +49,22 @@ public class ProcessTest {
     complete(task(), withVariables("variable4", "value4"));
 
     assertThat(processInstance).isEnded();
+  }
+
+  @Test
+  @Deployment(resources = {"userAssignationExample.bpmn"})
+  public void testUserAssignation(){
+    Mocks.register("setDoSomethingAssignee", new SetDoSomethingAssignee());
+
+    ProcessInstance processInstance = runtimeService().startProcessInstanceByKey("DynamicAssignationProcess");
+
+    assertThat(processInstance).isWaitingAt("DoSomethingTask").task().isNotAssigned().hasCandidateUser("demo");
+    complete(task());
+
+    assertThat(processInstance).isWaitingAt("DefineProcessStatusTask");
+    complete(task(), withVariables("processStatus", "REASSIGN", "previousAssignee", "someUser"));
+
+    assertThat(processInstance).isWaitingAt("DoSomethingTask").task().isAssignedTo("someUser");;
   }
 
 }
